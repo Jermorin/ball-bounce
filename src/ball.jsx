@@ -33,23 +33,28 @@ export default class Ball extends React.Component {
 	tick() {
 		const position = this.state.position;
 		const velocity = this.state.velocity;
+		const deceleration = 0.01;
+		const absorption = 0.05;
 		var velX = velocity.x, posX = position.x + velX;
 		var velY = velocity.y, posY = position.y + velY;
 
+		velX *= 1 - deceleration;
+		velY *= 1 - deceleration;
+
 		if (posX < 0) {
 			posX *= -1;
-			velX *= -1;
+			velX *= absorption - 1;
 		} else if (posX > this.maxX) {
 			posX = 2 * this.maxX - posX;
-			velX *= -1;
+			velX *= absorption - 1;
 		}
 
 		if (posY < 0) {
 			posY *= -1;
-			velY *= -1;
+			velY *= absorption - 1;
 		} else if (posY > this.maxY) {
 			posY = 2 * this.maxY - posY;
-			velY *= -1;
+			velY *= absorption - 1;
 		}
 
 		this.setState({
@@ -92,7 +97,6 @@ export default class Ball extends React.Component {
 	}
 
 	render() {
-		console.log('> ball render');
 		return (
 			<div className="ball" onMouseDown={this.startDrag.bind(this)} style={{
         top: this.state.position.y,
